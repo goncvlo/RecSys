@@ -1,0 +1,77 @@
+load_data :
+    users         : 'Data/u.user'
+    items         : 'Data/u.item'
+    ratings       : 'Data/u.data'
+    items_details : "https://raw.githubusercontent.com/6oncvlo/Recommendation-System/main/Data/MovDetails.csv"
+training :
+    test_date : '19980402'
+    model_selection :
+        hold_out :
+            validation_date : '19980312'
+        KFold :
+            n_splits : 5
+            shuffle  : False
+            random_state :
+        RepeatedKFold :
+            n_splits : 5
+            n_repeats  : 10
+            random_state : 0  
+        ts_split :
+            n_splits : 5
+            max_train_size :
+            test_size :
+            gap : 0            
+    params_algo :
+        BaselineOnly :
+            bsl_options  :
+                method        : ["als"]
+                reg_i         : [10]
+                reg_u         : [15]
+                n_epochs      : [10]
+            verbose      : [True]
+        KNN :
+            k            : [40]
+            min_k        : [1]
+            sim_options  : 
+                "name"        : ["msd"]
+                "user_based"  : [True]
+                "min_support" : [5]
+                "shrinkage"   : [0]
+            verbose      : [True]
+        MF_SVD :
+            n_factors    : [300, 400, 500, 600]
+            n_epochs     : [80, 100, 120]
+            biased       : [True]
+            init_mean    : [0]
+            init_std_dev : [0.1]
+            lr_bu        : [0.005]
+            lr_bi        : [0.005]
+            lr_pu        : [0.005]
+            lr_qi        : [0.005]
+            reg_bu       : [0.02]
+            reg_bi       : [0.02]
+            reg_pu       : [0.02]
+            reg_qi       : [0.02]
+            random_state : [0]
+            verbose      : [False]
+        NMF :
+            n_factors    : [15]
+            n_epochs     : [50, 75]
+            biased       : [True]
+            reg_pu       : [0.06]
+            reg_qi       : [0.06]
+            reg_bu       : [0.02]
+            reg_bi       : [0.02]
+            lr_bu        : [0.005]
+            lr_bi        : [0.005]
+            init_low     : [0]
+            init_high    : [1]
+            random_state : [0]
+            verbose      : [False]
+        CoClustering :
+            n_cltr_u     : [3]
+            n_cltr_i     : [3]
+            n_epochs     : [20]
+            random_state : [0]
+            verbose      : [False]
+            
