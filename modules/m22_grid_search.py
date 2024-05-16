@@ -1,11 +1,11 @@
-import m11_load_data, m21_model_selection, m23_evaluation
+import modules.m11_load_data, modules.m21_model_selection, modules.m23_evaluation
 from itertools import product
 import pandas as pd
 from surprise.model_selection import KFold, RepeatedKFold, GridSearchCV
 from surprise import BaselineOnly, KNNBasic, KNNWithMeans, KNNWithZScore, KNNBaseline, SVD, NMF, CoClustering
 
 # read config file
-config = m11_load_data.read_yaml()
+config = modules.m11_load_data.read_yaml()
 # define algorithm objects
 algorithms = { 'BaselineOnly' : BaselineOnly
               , 'KNNBasic' : KNNBasic, 'KNNWithMeans' : KNNWithMeans, 'KNNWithZScore' : KNNWithZScore, 'KNNBaseline' : KNNBaseline
@@ -15,7 +15,7 @@ algorithms = { 'BaselineOnly' : BaselineOnly
 def grid_search( df_ratings : pd.DataFrame, algorithm_name : str, cv_iterator : str
                 , measures : list = ['mae', 'rmse', 'mse', 'fcp'], return_train_measures : bool = True, refit : bool = False):
 
-    data = m21_model_selection.cross_validation(df_ratings = df_ratings, cv_iterator = cv_iterator)
+    data = modules.m21_model_selection.cross_validation(df_ratings = df_ratings, cv_iterator = cv_iterator)
     
     if cv_iterator not in ['hold_out', 'ts_split']:
         run_summary = grid_search_surprise( data = data, algorithm_name = algorithm_name, cv_iterator = cv_iterator
@@ -68,17 +68,17 @@ def grid_search_custom( data : dict, algorithm_name : str
             predictions = algo_class_i.test( data['ms_mdl'][list(data['ms_mdl'].keys())[split_i+1]] )
 
             # run_summary_i['split'+str(split_i//2)+'_test_mae'] = accuracy.mae(predictions, verbose = False)
-            measure_results = m23_evaluation.eval_measures(predictions, measures)
+            measure_results = modules.m23_evaluation.eval_measures(predictions, measures)
             for m in measures:
                 run_summary_i['split'+str(split_i//2)+'_test_'+m] = measure_results[m]
             
             if return_train_measures:
-                trainset_raw_model = m11_load_data.load_from_df( data['ms'][list(data['ms_mdl'].keys())[split_i]] )
+                trainset_raw_model = modules.m11_load_data.load_from_df( data['ms'][list(data['ms_mdl'].keys())[split_i]] )
                 trainset_raw_model = [ trainset_raw_model.df.iloc[i].to_list() for i in range(len(trainset_raw_model.df)) ]
                 predictions_train = algo_class_i.test( trainset_raw_model )
                 
                 # run_summary_i['split'+str(split_i//2)+'_train_mae'] = accuracy.mae(predictions_train, verbose = False)
-                measure_results_train = m23_evaluation.eval_measures(predictions_train, measures)
+                measure_results_train = modules.m23_evaluation.eval_measures(predictions_train, measures)
                 for m in measures:
                     run_summary_i['split'+str(split_i//2)+'_train_'+m] = measure_results_train[m]
 

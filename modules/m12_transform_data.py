@@ -1,9 +1,9 @@
-import m11_load_data
+import modules.m11_load_data
 import pandas as pd
 
 def transform_data():
     
-    df_users, df_movies, df_ratings = m11_load_data.load_data()
+    df_users, df_movies, df_ratings = modules.m11_load_data.load_data()
 
     # Transform users' dataframe
     df_users['userId'] = df_users['userId'] - 1
