@@ -1,4 +1,4 @@
-import m11_load_data
+import modules.m11_load_data
 import pandas as pd
 from sklearn.model_selection import KFold, RepeatedKFold, TimeSeriesSplit
 
@@ -18,7 +18,7 @@ def cross_validation(df_ratings : pd.DataFrame, cv_iterator : str):
     data = train_test_split(df_ratings)
     
     if cv_iterator in ['hold_out', 'ts_split']:
-        config_ms = m11_load_data.read_yaml()['training']['model_selection']
+        config_ms = modules.m11_load_data.read_yaml()['training']['model_selection']
         data = train_test_split(df_ratings)
         data['ms'], data['ms_mdl'] = {}, {}    
     
@@ -39,7 +39,7 @@ def cross_validation(df_ratings : pd.DataFrame, cv_iterator : str):
     
         # format data for the algorithm
         for df_name in data['ms'].keys():
-            data['ms_mdl'][df_name] = m11_load_data.load_from_df(data['ms'][df_name])
+            data['ms_mdl'][df_name] = modules.m11_load_data.load_from_df(data['ms'][df_name])
             if df_name.endswith("train"):
                 data['ms_mdl'][df_name] = data['ms_mdl'][df_name].build_full_trainset()
             else:
@@ -49,34 +49,11 @@ def cross_validation(df_ratings : pd.DataFrame, cv_iterator : str):
 
 def train_test_split(df_ratings : pd.DataFrame):
 
-    test_date = config_ms = m11_load_data.read_yaml()['training']['test_date']
+    test_date = modules.m11_load_data.read_yaml()['training']['test_date']
     data = {'train' : {}, 'test' : {} }
     data['train']['raw'], data['test']['raw'] = df_ratings[ df_ratings['date'] < test_date ], df_ratings[ df_ratings['date'] >= test_date ]
-    data['train']['model'], data['test']['model'] = [ m11_load_data.load_from_df(df) for df in [ data['train']['raw'], data['test']['raw'] ]]
+    data['train']['model'], data['test']['model'] = [ modules.m11_load_data.load_from_df(df) for df in [ data['train']['raw'], data['test']['raw'] ]]
     data['test']['model'] = [ data['test']['model'].df.iloc[i].to_list() for i in range(len(data['test']['model'].df)) ]
 
     return data
-    
-def params_grid(algorithm_name : str):
-    """
-    Transform parameters values into pairs of coordinates.
-    It has the read_yaml function as a dependency.
-
-    Args:
-        algorithm : algorithm to be tested
-    Returns
-        params    : parameters to be used in GridSearch
-        
-    """
-    
-    params_algo = config['training']['params_algo'][algorithm_name]
-    keys, values = list(params_algo.keys()), list(params_algo.values())
-
-    # generating all possible combinations - pairs of coordinates
-    all_combinations = product(*values)
-
-    # creating a list of dictionaries with the parameter's name and value
-    dict_list = [{keys[i]: combination[i] for i in range(len(keys))} for combination in all_combinations]
-    
-    return dict_list
-    
+   

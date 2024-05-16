@@ -1,9 +1,9 @@
-import m11_load_data
+import modules.m11_load_data
 import pandas as pd
 
-def transform_data():
+def transform_data(only_ratings_set : bool = True):
     
-    df_users, df_movies, df_ratings = m11_load_data.load_data()
+    df_users, df_movies, df_ratings = modules.m11_load_data.load_data()
 
     # Transform users' dataframe
     df_users['userId'] = df_users['userId'] - 1
@@ -18,7 +18,10 @@ def transform_data():
     df_ratings['date'] = pd.to_datetime(df_ratings['timestamp'],unit='s').dt.date.astype('string').str.replace('-','')
     df_ratings['time'] = pd.to_datetime(df_ratings['timestamp'],unit='s').dt.time.astype('string').str.replace(':','')
 
-    return df_users, df_movies, df_ratings
+    if only_ratings_set:
+        return df_ratings
+    else:
+        return df_users, df_movies, df_ratings
 
 def matrix_ui():
     

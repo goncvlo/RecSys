@@ -39,8 +39,8 @@ training :
                 "shrinkage"   : [0]
             verbose      : [True]
         MF_SVD :
-            n_factors    : [300, 400, 500, 600]
-            n_epochs     : [80, 100, 120]
+            n_factors    : [300, 400]
+            n_epochs     : [80, 100]
             biased       : [True]
             init_mean    : [0]
             init_std_dev : [0.1]
