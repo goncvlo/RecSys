@@ -49,34 +49,11 @@ def cross_validation(df_ratings : pd.DataFrame, cv_iterator : str):
 
 def train_test_split(df_ratings : pd.DataFrame):
 
-    test_date = config_ms = modules.m11_load_data.read_yaml()['training']['test_date']
+    test_date = modules.m11_load_data.read_yaml()['training']['test_date']
     data = {'train' : {}, 'test' : {} }
     data['train']['raw'], data['test']['raw'] = df_ratings[ df_ratings['date'] < test_date ], df_ratings[ df_ratings['date'] >= test_date ]
     data['train']['model'], data['test']['model'] = [ modules.m11_load_data.load_from_df(df) for df in [ data['train']['raw'], data['test']['raw'] ]]
     data['test']['model'] = [ data['test']['model'].df.iloc[i].to_list() for i in range(len(data['test']['model'].df)) ]
 
     return data
-    
-def params_grid(algorithm_name : str):
-    """
-    Transform parameters values into pairs of coordinates.
-    It has the read_yaml function as a dependency.
-
-    Args:
-        algorithm : algorithm to be tested
-    Returns
-        params    : parameters to be used in GridSearch
-        
-    """
-    
-    params_algo = config['training']['params_algo'][algorithm_name]
-    keys, values = list(params_algo.keys()), list(params_algo.values())
-
-    # generating all possible combinations - pairs of coordinates
-    all_combinations = product(*values)
-
-    # creating a list of dictionaries with the parameter's name and value
-    dict_list = [{keys[i]: combination[i] for i in range(len(keys))} for combination in all_combinations]
-    
-    return dict_list
-    
+   
