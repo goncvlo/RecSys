@@ -106,7 +106,7 @@ def params_grid(algorithm_name : str):
     
     return dict_list
 
-def predict(data : dict, algorithm_name :str, params : dict, return_pred : bool = True):
+def test(data : dict, algorithm_name :str, params : dict, return_pred : bool = True):
 
     algo_class = algorithms[algorithm_name]
     algo_class = algo_class(**params)
