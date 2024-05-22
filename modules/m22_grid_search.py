@@ -121,4 +121,4 @@ def predict(data : dict, algorithm_name :str, params : dict, return_pred : bool 
     display( pd.DataFrame({'Train': modules.m23_evaluation.eval_measures(train_pred), 'Test': modules.m23_evaluation.eval_measures(test_pred)}) )
 
     if return_pred:
-        train_pred
+        test_pred
