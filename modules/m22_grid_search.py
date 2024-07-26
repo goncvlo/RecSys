@@ -7,10 +7,7 @@ from surprise import BaselineOnly, KNNBasic, KNNWithMeans, KNNWithZScore, KNNBas
 # read config file
 config = modules.m11_load_data.read_yaml()
 # define algorithm objects
-algorithms = { 'BaselineOnly' : BaselineOnly
-              , 'KNNBasic' : KNNBasic, 'KNNWithMeans' : KNNWithMeans, 'KNNWithZScore' : KNNWithZScore, 'KNNBaseline' : KNNBaseline
-              , 'MF_SVD' : SVD, 'NMF' : NMF
-              , 'CoClustering' : CoClustering }
+algorithms = { 'BaselineOnly' : BaselineOnly, 'KNN' : KNNWithMeans, 'MF_SVD' : SVD, 'NMF' : NMF, 'CoClustering' : CoClustering }
 
 def grid_search( df_ratings : pd.DataFrame, algorithm_name : str, cv_iterator : str
                 , measures : list = ['mae', 'rmse', 'mse', 'fcp'], return_train_measures : bool = True, refit : bool = False):
@@ -108,3 +105,20 @@ def params_grid(algorithm_name : str):
     dict_list = [{keys[i]: combination[i] for i in range(len(keys))} for combination in all_combinations]
     
     return dict_list
+
+def test(data : dict, algorithm_name :str, params : dict, return_pred : bool = True):
+
+    algo_class = algorithms[algorithm_name]
+    algo_class = algo_class(**params)
+
+    # train algorithm
+    algo_class.fit(data["train"]["model"].build_full_trainset())
+
+    # get training and test error
+    train_pred = algo_class.test( [ data['train']['model'].df.iloc[i].to_list() for i in range(len(data['train']['model'].df)) ] )
+    test_pred  = algo_class.test( data["test"]["model"] )
+
+    display( pd.DataFrame({'Train': modules.m23_evaluation.eval_measures(train_pred), 'Test': modules.m23_evaluation.eval_measures(test_pred)}) )
+
+    if return_pred:
+        test_pred
