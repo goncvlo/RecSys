@@ -1,5 +1,5 @@
 import pandas as pd
-#from surprise import Dataset, Reader
+from surprise import Dataset, Reader
 
 def load_data(config:dict)->dict:
 
@@ -25,6 +25,7 @@ def load_from_df(df:pd.DataFrame):
         df_ratings : pd.DataFrame with given ratings of users per movie
     Returns   
     """
-
-    reader = Reader(rating_scale = (0,5))
-    return Dataset.load_from_df(df[["userId", "itemId", "rating"]], reader)
+    
+    df=df[["userId", "itemId", "rating"]]
+    readr=Reader(rating_scale = (0,5))
+    return Dataset.load_from_df(df=df, reader=readr)
