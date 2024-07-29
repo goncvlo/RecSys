@@ -19,7 +19,7 @@ def prepare_data(dataframes:dict):
         .astype(dtype={'movie_title':'string', 'IMDb_URL':'string'})
     
     # transform ratings dataframe
-    for col, chr in zip(['date', 'time'], ['-', ':']):
-        dataframes['ratings'][col]=pd.to_datetime(dataframes['ratings']['timestamp'],unit='s').dt.time.astype('string').str.replace(chr,'')
+    dataframes['ratings']['date']=pd.to_datetime(dataframes['ratings']['timestamp'],unit='s').dt.date.astype('string').str.replace('-','')
+    dataframes['ratings']['time']=pd.to_datetime(dataframes['ratings']['timestamp'],unit='s').dt.time.astype('string').str.replace(':','')
     
     return dataframes

@@ -12,7 +12,7 @@ data_loader:
 #        path: https://raw.githubusercontent.com/6oncvlo/Recommendation-System/main/Data/MovDetails.csv
 cross_validation:
     iterator: 'KFold'
-    metrics: ['mae', 'rmse', 'mse', 'fcp']
+    metrics: ['mae']
 model:
     test_date: '19980402'
     algo_class: SVD
