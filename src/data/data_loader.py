@@ -1,5 +1,4 @@
 import pandas as pd
-from surprise import Dataset, Reader
 
 def load_data(config:dict)->dict:
 
@@ -17,15 +16,16 @@ def load_data(config:dict)->dict:
         )
     return dataframes
 
-def load_from_df(df:pd.DataFrame):
-    """
-    Convert dataframe into readable object to use in surprise models.
+class Dataset_custom:
+    def __init__(self, raw_ratings):
+        self.raw_ratings = raw_ratings
 
-    Args:
-        df_ratings : pd.DataFrame with given ratings of users per movie
-    Returns   
-    """
-    
-    df=df[["userId", "itemId", "rating"]]
-    readr=Reader(rating_scale = (0,5))
-    return Dataset.load_from_df(df=df, reader=readr)
+    @classmethod
+    def from_df(cls, df):
+        """Convert dataframe into a list of ratings and return a Dataset instance."""
+        df = df[["userId", "itemId", "rating", "date"]]
+        raw_ratings = [
+            (uid, iid, float(r), date, None)
+            for uid, iid, r, date in df.itertuples(index=False)
+        ]
+        return cls(raw_ratings)
