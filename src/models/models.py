@@ -18,6 +18,9 @@ cv_iterators={'KFold':KFold(n_splits=5, random_state=0, shuffle=False)
               #, 'TimeSeriesSplit':TimeSeriesSplit(n_splits=5, max_train_size=None, test_size=None, gap=0)
               , 'HoldOut':HoldOut(validation_date='19980312')}
 
+# define accuracy metrics to evaluate predictions
+pred_metrics={'rmse':accuracy.rmse, 'mse':accuracy.mse, 'mae':accuracy.mae, 'fcp':accuracy.fcp}
+
 
 class grid_search():
     def __init__(self, algo_class:str, measures:list, cv:str, return_train_measures:bool):
@@ -27,7 +30,7 @@ class grid_search():
         self.cv=cv_iterators[cv]
         self.return_train_measures=return_train_measures
     
-    def fit(self, data:pd.DataFrame):
+    def fit(self, train_set:pd.DataFrame):
         # prepare ingestion into surprise models
         data=Dataset_custom.from_df(data)
         # set grid search params and fit data
@@ -38,8 +41,8 @@ class grid_search():
             , cv=self.cv
             , return_train_measures=self.return_train_measures
             )
-        gs.fit(data=data)
-
+        gs.fit(data=train_set)
+        # get cross validation results
         cv_results=pd.DataFrame.from_dict(gs.cv_results)
         cv_results.drop(
             columns=[col for col in cv_results.columns if any(col.startswith(drop_col) for drop_col in ['mean_', 'std_', 'rank_', 'params'])]
@@ -49,8 +52,8 @@ class grid_search():
         return cv_results
 
 
-class model_testing():
-    def __init__(self, algo_class:str, params:dict, metrics:list):
+class model_evaluation():
+    def __init__(self, algo_class:str, params:dict, metrics:list=['rmse', 'mse', 'mae', 'fcp']):
         self.algo_class=algo_classes[algo_class](**params)
         self.metrics=metrics
 
@@ -61,11 +64,14 @@ class model_testing():
         train_set=train_set.build_full_trainset()
         # train algorithm
         self.algo_class.fit(train_set)
-
-        return self
     
-    def evaluate(self, test_set:pd.DataFrame):
+    def evaluate(self, test_set:pd.DataFrame, train_set:pd.DataFrame):
+        # metrics to compute
+        eval_metrics=dict()
         # prepare ingestion into surprise models
-        test_set=list(test_set[["userId", "itemId", "rating"]].itertuples(index=False, name=None))
-        predictions = self.algo_class.test(test_set)
-        rmse = accuracy.rmse(predictions)
+        train_set, test_set=[list(df[["userId", "itemId", "rating"]].itertuples(index=False, name=None)) for df in [train_set, test_set]]
+        train_pred, test_pred = [self.algo_class.test(df) for df in [train_set, test_set]]
+        for metric in self.metrics:
+            eval_metrics[metric+'_test']=pred_metrics[metric](predictions=test_pred,verbose=False)
+            eval_metrics[metric+'_train']=pred_metrics[metric](predictions=train_pred,verbose=False)
+        self.metrics=eval_metrics

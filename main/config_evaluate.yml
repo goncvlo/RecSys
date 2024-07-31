@@ -12,7 +12,6 @@ data_loader:
 #        path: https://raw.githubusercontent.com/6oncvlo/Recommendation-System/main/Data/MovDetails.csv
 model:
     test_date: '19980402'
-    metrics: ['mae']
     algo_class: SVD
     params:
         n_factors: 300

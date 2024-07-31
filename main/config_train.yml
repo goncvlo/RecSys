@@ -12,7 +12,11 @@ data_loader:
 #        path: https://raw.githubusercontent.com/6oncvlo/Recommendation-System/main/Data/MovDetails.csv
 cross_validation:
     iterator: 'KFold'
-    metrics: ['mae']
+    metrics: ['rmse']
 model:
     test_date: '19980402'
     algo_class: SVD
+tracking:
+    uri: http://127.0.0.1:5000
+    experiment_name: RecSys
+    run_name: Testing
