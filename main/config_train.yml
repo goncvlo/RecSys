@@ -15,7 +15,7 @@ cross_validation:
     metrics: ['rmse']
 model:
     test_date: '19980402'
-    algo_class: SVD
+    algo_class: ['SVD', 'NMF']
 tracking:
     uri: http://127.0.0.1:5000
     experiment_name: RecSys

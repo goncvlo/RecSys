@@ -32,7 +32,7 @@ class grid_search():
     
     def fit(self, train_set:pd.DataFrame):
         # prepare ingestion into surprise models
-        data=Dataset_custom.from_df(data)
+        train_set=Dataset_custom.from_df(train_set)
         # set grid search params and fit data
         gs=GridSearchCV(
             algo_class=self.algo_class
@@ -44,11 +44,10 @@ class grid_search():
         gs.fit(data=train_set)
         # get cross validation results
         cv_results=pd.DataFrame.from_dict(gs.cv_results)
-        cv_results.drop(
-            columns=[col for col in cv_results.columns if any(col.startswith(drop_col) for drop_col in ['mean_', 'std_', 'rank_', 'params'])]
-            , inplace=True
-            )
-        #cv_results.columns=cv_results.columns.str.replace('param_', "", regex=False)
+        # define best score, params and model
+        self.best_score=gs.best_score[self.measures[0]]
+        self.best_params=gs.best_params[self.measures[0]]
+        self.best_estimator=gs.best_estimator[self.measures[0]]
         return cv_results
 
 
