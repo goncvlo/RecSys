@@ -51,7 +51,7 @@ class grid_search():
         return cv_results
 
 
-class model_evaluation():
+class modeling():
     def __init__(self, algo_class:str, params:dict, metrics:list=['rmse', 'mse', 'mae', 'fcp']):
         self.algo_class=algo_classes[algo_class](**params)
         self.metrics=metrics
