@@ -61,6 +61,7 @@ class modeling():
         reader = Reader(rating_scale=(1, 5))
         train_set=Dataset.load_from_df(train_set[["userId", "itemId", "rating"]], reader)
         train_set=train_set.build_full_trainset()
+        self.train_set=train_set
         # train algorithm
         self.algo_class.fit(train_set)
     
@@ -70,7 +71,14 @@ class modeling():
         # prepare ingestion into surprise models
         train_set, test_set=[list(df[["userId", "itemId", "rating"]].itertuples(index=False, name=None)) for df in [train_set, test_set]]
         train_pred, test_pred = [self.algo_class.test(df) for df in [train_set, test_set]]
+        # log metrics
         for metric in self.metrics:
             eval_metrics[metric+'_test']=pred_metrics[metric](predictions=test_pred,verbose=False)
             eval_metrics[metric+'_train']=pred_metrics[metric](predictions=train_pred,verbose=False)
         self.metrics=eval_metrics
+
+    def inference(self, n:int=10):
+        # prepare ingestion into surprise package
+        test_set=self.train_set.build_anti_testset()
+        predictions=self.algo_class.test(test_set)
+        return predictions

@@ -1,0 +1,34 @@
+data_loader:
+    users:
+        path: src/data/datasets/u.user
+        columns: ['userId', 'age', 'gender', 'job', 'zip_code']
+    items:
+        path: src/data/datasets/u.item
+        columns: ['itemId', 'movie_title', 'release_date', 'video_release_date', 'IMDb_URL', 'unknown', 'Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy', 'Film-Noir', 'Horror', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western']
+    ratings:
+        path: src/data/datasets/u.data
+        columns: ['userId', 'itemId', 'rating', 'timestamp']
+#    items_attributes:
+#        path: https://raw.githubusercontent.com/6oncvlo/Recommendation-System/main/Data/MovDetails.csv
+model:
+    algo_class: SVD
+    params:
+        n_factors: 300
+        n_epochs: 100
+        biased: True
+        init_mean: 0
+        init_std_dev: 0.1
+        lr_bu: 0.005
+        lr_bi: 0.005
+        lr_pu: 0.005
+        lr_qi: 0.005
+        reg_bu: 0.02
+        reg_bi: 0.02
+        reg_pu: 0.02
+        reg_qi: 0.02
+        random_state: 0
+        verbose: False
+tracking:
+    uri: http://127.0.0.1:5000
+    experiment_name: RecSys
+    run_name: Inference
