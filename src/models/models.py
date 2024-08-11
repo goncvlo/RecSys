@@ -5,7 +5,7 @@ import pandas as pd
 from src.data.data_loader import Dataset_custom
 from surprise.model_selection import GridSearchCV
 from surprise import Dataset, Reader
-import mlflow
+from src.utils.utils import get_top_n
 
 # define algorithm objects and read its param grid
 algo_classes={'KNNWithMeans':KNNWithMeans, 'SVD':SVD, 'NMF':NMF, 'CoClustering':CoClustering}
@@ -61,6 +61,7 @@ class modeling():
         reader = Reader(rating_scale=(1, 5))
         train_set=Dataset.load_from_df(train_set[["userId", "itemId", "rating"]], reader)
         train_set=train_set.build_full_trainset()
+        self.train_set=train_set
         # train algorithm
         self.algo_class.fit(train_set)
     
@@ -70,7 +71,18 @@ class modeling():
         # prepare ingestion into surprise models
         train_set, test_set=[list(df[["userId", "itemId", "rating"]].itertuples(index=False, name=None)) for df in [train_set, test_set]]
         train_pred, test_pred = [self.algo_class.test(df) for df in [train_set, test_set]]
+        # log metrics
         for metric in self.metrics:
             eval_metrics[metric+'_test']=pred_metrics[metric](predictions=test_pred,verbose=False)
             eval_metrics[metric+'_train']=pred_metrics[metric](predictions=train_pred,verbose=False)
         self.metrics=eval_metrics
+
+    def inference(self, n:int=3):
+        # prepare ingestion into surprise package
+        test_set=self.train_set.build_anti_testset()
+        predictions=self.algo_class.test(test_set)
+        top_n=get_top_n(predictions=predictions, n=n)
+        top_n=pd.DataFrame([(uid, iid, est) for uid, user_ratings in top_n.items() for iid, est in user_ratings]
+                           ,columns=['userId', 'itemId', 'est_rating'])\
+                           .sort_values(by=['userId', 'est_rating'], ascending=[True, False])
+        return top_n
