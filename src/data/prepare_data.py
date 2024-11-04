@@ -3,7 +3,6 @@ import pandas as pd
 def prepare_data(dataframes:dict):
 
     for df_name in list(dataframes.keys()):
-        
         # col range is [0,len(col)]
         for col in ['userId', 'itemId']:
             if col in dataframes[df_name].columns:
