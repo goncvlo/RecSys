@@ -26,5 +26,5 @@ RecSys is a collection of recommendation algorithms applied to the MovieLens ml-
 - Implement a web interface for real-time recommendations.
 
 **References**
-- [MovieLens Dataset]([url](https://grouplens.org/datasets/movielens/))
-- [Surprise]([url](https://surprise.readthedocs.io/en/stable/))
+- [MovieLens Dataset](https://grouplens.org/datasets/movielens/)
+- [Surprise](https://surprise.readthedocs.io/en/stable/)
