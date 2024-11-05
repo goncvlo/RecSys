@@ -6,7 +6,7 @@ RecSys is a collection of recommendation algorithms applied to the MovieLens ml-
 
 **Features**
 - Multiple algorithms: User-based and item-based collaborative filtering, Matrix Factorization, etc.
-- Detailed evaluation using metrics like RMSE and Precision@K.
+- Detailed evaluation using metrics like RMSE and FCP.
 - Jupyter notebooks for step-by-step model training and inference.
 
 **Usage**
