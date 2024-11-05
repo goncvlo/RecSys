@@ -2,3 +2,6 @@
 __pycache__/
 # ignore Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+# ignore MLflow tracking and cache files
+mlruns/
+.mlflow/
