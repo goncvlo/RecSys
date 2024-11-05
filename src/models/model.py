@@ -9,7 +9,7 @@ from src.utils.utils import get_top_n
 
 # define algorithm objects and read its param grid
 algo_classes={'KNNWithMeans':KNNWithMeans, 'SVD':SVD, 'NMF':NMF, 'CoClustering':CoClustering}
-with open('src/models/algo_params.yml', 'r') as file:
+with open('../src/models/algo_params.yml', 'r') as file:
     param_grid=yaml.load(file, Loader=yaml.SafeLoader)
 
 # define cross-validation iterator and its params
