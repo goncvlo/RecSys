@@ -1,12 +1,12 @@
 data_loader:
     users:
-        path: src/data/datasets/u.user
+        path: ../data/u.user
         columns: ['userId', 'age', 'gender', 'job', 'zip_code']
     items:
-        path: src/data/datasets/u.item
+        path: ../data/u.item
         columns: ['itemId', 'movie_title', 'release_date', 'video_release_date', 'IMDb_URL', 'unknown', 'Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy', 'Film-Noir', 'Horror', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western']
     ratings:
-        path: src/data/datasets/u.data
+        path: ../data/u.data
         columns: ['userId', 'itemId', 'rating', 'timestamp']
 #    items_attributes:
 #        path: https://raw.githubusercontent.com/6oncvlo/Recommendation-System/main/Data/MovDetails.csv
@@ -30,6 +30,5 @@ model:
         random_state: 0
         verbose: False
 tracking:
-    uri: http://127.0.0.1:5000
     experiment_name: RecSys
     run_name: Evaluation
