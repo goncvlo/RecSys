@@ -8,7 +8,7 @@ RecSys is a collection of recommendation algorithms applied to the MovieLens ml-
 - Detailed evaluation using metrics like RMSE and FCP.
 - Jupyter notebooks for step-by-step model training and inference.
 
-### Usage
+### :open_file_folder: Usage
 - Data Preparation: Run the data preprocessing script to prepare the MovieLens dataset.
 - Model Training: Execute the train_model.ipynb notebook to train various models.
 - Evaluation: Check best model performance using the evaluate_model.ipynb notebook.
