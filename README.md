@@ -26,7 +26,7 @@ To install the RecSys repository, begin by creating and activating a virtual env
 >> recsys-env\Scripts\activate
 ```
 ```
->> git clone https://github.com/6oncvlo/RecSys.git
+>> git clone https://github.com/goncvlo/RecSys.git
 >> cd RecSys
 >> pip install -r requirements.txt
 ```
